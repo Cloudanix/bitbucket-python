@@ -30,10 +30,11 @@ class Client(object):
         elif client_id and client_secret:
             token_req_payload = {'grant_type': 'client_credentials'}
             response = requests.post(self.TOKEN_URL, data=token_req_payload, allow_redirects=False, auth=(client_id, client_secret))
-            self.token = json.loads(response.text)['access_token']
+            response = self._parse(response)
+            self.token = response['access_token']
             self.use_token = True
 
-        if not (self.use_password and self.token):
+        if not (self.use_password or self.token):
             raise NotAuthenticatedError("Insufficient credentials")
 
     def initialize(self, owner=None):

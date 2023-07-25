@@ -345,6 +345,15 @@ class Client(object):
         """
         return self._delete('2.0/repositories/{}/{}/hooks/{}'.format(self.username, repository_slug, webhook_uid),
                             params=params)
+    
+    def get_diff_stat(self, commit, repo_slug, parent=None):
+        """
+        Returns diff stat for given commits
+        """
+        if parent:
+            return self._get(f'2.0/repositories/{self.username}/{repo_slug}/diffstat/{commit}..{parent}')
+        else:
+            return self._get(f'2.0/repositories/{self.username}/{repo_slug}/diffstat/{commit}')
 
     def _get(self, endpoint, params=None):
         if self.use_password:
@@ -417,15 +426,6 @@ class Client(object):
         else:
             raise NotAuthenticatedError("Insufficient credentials")
         return self._parse(response)
-    
-    def get_diff_stat(self, commit, repo_slug, parent=None):
-        """
-        Returns diff stat for given commits
-        """
-        if parent:
-            return self._get(f'2.0/repositories/{self.username}/{repo_slug}/diffstat/{commit}..{parent}')
-        else:
-            return self._get(f'2.0/repositories/{self.username}/{repo_slug}/diffstat/{commit}')
 
     def _parse(self, response):
         status_code = response.status_code

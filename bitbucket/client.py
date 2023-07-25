@@ -417,6 +417,12 @@ class Client(object):
         else:
             raise NotAuthenticatedError("Insufficient credentials")
         return self._parse(response)
+    
+    def get_diff_stat(self, commit, parent, workspace, repo_slug):
+        """
+        Returns diff stat for given commits
+        """
+        return self._get(f'2.0/repositories/{workspace}/{repo_slug}/diffstat/{commit}..{parent}')
 
     def _parse(self, response):
         status_code = response.status_code

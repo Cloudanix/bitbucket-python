@@ -44,6 +44,20 @@ class Client(object):
             owner = user_data.get('username')
         self.username = owner
 
+    def get_commit_statuses(self, repository_slug, commit_hash, params=None):
+        """Returns the statuses for a specific commit.
+
+        Args:
+            repository_slug:
+            commit_hash:
+            params:
+
+        Returns:
+
+        """
+        return self._get('2.0/repositories/{}/{}/commit/{}/statuses'.format(self.username, repository_slug, commit_hash),
+                         params=params)
+
     def get_user(self, params=None):
         """Returns the currently logged in user.
 
@@ -121,6 +135,26 @@ class Client(object):
         Returns: Repository
         """
         return self._post('2.0/repositories/{}/{}'.format(team, name), params, data)
+
+    def create_commit_status(self, repository_slug, commit_hash, data, params=None):
+        """Creates a new commit status.
+
+        This call requires authentication. Private repositories or private issue trackers require
+        the caller to authenticate with an account that has appropriate authorisation.
+
+        The authenticated user is used for the status' creator.
+
+        Args:
+            repository_slug:
+            commit_hash:
+            data:
+            params:
+
+        Returns:
+
+        """
+        return self._post('2.0/repositories/{}/{}/commit/{}/statuses/build'.format(self.username, repository_slug,
+                                                                              commit_hash), params=params, data=data)
 
     def get_repository_branches(self, repository_slug, params=None):
         return self._get('2.0/repositories/{}/{}/refs/branches'.format(self.username, repository_slug), params=params)
